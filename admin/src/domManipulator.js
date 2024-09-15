@@ -9,7 +9,7 @@ import { createRoot } from 'react-dom/client';
 /**
  * Setup DOM Manipulator
  * Deze functie initialiseert een MutationObserver die de DOM observeert op toevoeging van nieuwe nodes.
- * Het zoekt specifiek naar 'Delete' knoppen en voegt daar de Duplicator-knop naast toe.
+ * Het zoekt specifiek naar 'Delete' knoppen en voegt daar de Duplicator-knop naast toe in een nieuwe <span>.
  *
  * @param {object} app - Strapi app instance
  */
@@ -39,25 +39,39 @@ export const setupDOMManipulator = (app) => {
                 const buttonContainer = button.parentElement; // De 'span' element rond de 'Delete' knop
 
                 if (buttonContainer) {
-                  // Controleer of de duplicator knop al bestaat
+                  // Controleer of de duplicator knop al bestaat binnen dezelfde container
                   if (!buttonContainer.querySelector('.duplicator-button')) {
                     console.log('Voeg duplicator knop toe aan:', buttonContainer);
 
+                    // Creëer een nieuwe span element voor de duplicator knop
+                    const duplicatorSpan = document.createElement('span');
+                    duplicatorSpan.classList.add('duplicator-span');
+                    duplicatorSpan.style.display = 'inline-block'; // Zorg ervoor dat de span naast bestaande spans staat
+                    duplicatorSpan.style.marginLeft = '8px'; // Voeg wat ruimte toe
+
                     // Creëer een nieuwe button element voor de duplicator knop
                     const duplicatorButton = document.createElement('button');
-                    duplicatorButton.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#212134" d="M1.056 24h15.906c.583 0 1.056-.473 1.056-1.056V7.028c0-.583-.473-1.056-1.056-1.056H1.056C.473 5.972 0 6.445 0 7.028v15.916C0 23.527.473 24 1.056 24Z"></path><path fill="#212134" d="M8.094 2.111h13.795v13.795h-1.127v2.112h2.182A1.056 1.056 0 0 0 24 16.962V1.056A1.056 1.056 0 0 0 22.944 0H7.038a1.056 1.056 0 0 0-1.056 1.056v2.252h2.112V2.11Z"></path></svg>';
                     duplicatorButton.classList.add('duplicator-button');
-                    duplicatorButton.style.display = 'inline-block'; // Zorg ervoor dat de knop naast bestaande knoppen staat
-                    duplicatorButton.style.marginLeft = '8px'; // Voeg wat ruimte toe
                     duplicatorButton.type = 'button'; // Zorg dat het een button is
                     duplicatorButton.setAttribute('aria-label', 'Dupliceer Component'); // Toegankelijkheid
 
-                    // Render de DuplicatorWrapper component in de nieuwe button
-                    const root = createRoot(duplicatorButton);
-                    root.render(<DuplicatorWrapper buttonElement={duplicatorButton} />);
+                    // Voeg jouw specifieke SVG toe aan de duplicator button
+                    duplicatorButton.innerHTML = `
+                      <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path fill="#212134" d="M1.056 24h15.906c.583 0 1.056-.473 1.056-1.056V7.028c0-.583-.473-1.056-1.056-1.056H1.056C.473 5.972 0 6.445 0 7.028v15.916C0 23.527.473 24 1.056 24Z"></path>
+                        <path fill="#212134" d="M8.094 2.111h13.795v13.795h-1.127v2.112h2.182A1.056 1.056 0 0 0 24 16.962V1.056A1.056 1.056 0 0 0 22.944 0H7.038a1.056 1.056 0 0 0-1.056 1.056v2.252h2.112V2.11Z"></path>
+                      </svg>
+                    `;
 
-                    // Voeg de duplicator knop toe aan de buttonContainer
-                    buttonContainer.appendChild(duplicatorButton);
+                    // Render de DuplicatorWrapper component in de duplicator button
+                    const root = createRoot(duplicatorButton);
+                    root.render(<DuplicatorWrapper duplicatorButton={duplicatorButton} />);
+
+                    // Voeg de duplicator button toe aan de nieuwe span
+                    duplicatorSpan.appendChild(duplicatorButton);
+
+                    // Voeg de duplicator span toe naast de bestaande span
+                    buttonContainer.parentElement.insertBefore(duplicatorSpan, buttonContainer.nextSibling);
                   }
                 } else {
                   console.warn('buttonContainer niet gevonden voor Delete knop:', button);
@@ -81,9 +95,9 @@ export const setupDOMManipulator = (app) => {
  * Deze component wordt gerenderd binnen de duplicator-knop en handelt de duplicatie logica af.
  *
  * @param {object} props - Component props
- * @param {HTMLElement} props.buttonElement - De duplicator button element
+ * @param {HTMLElement} props.duplicatorButton - De duplicator button element
  */
-const DuplicatorWrapper = ({ buttonElement }) => {
+const DuplicatorWrapper = ({ duplicatorButton }) => {
   const { modifiedData, onChange } = useCMEditViewDataManager(); // Haal de huidige data en onChange functie op
   const { formatMessage } = useIntl(); // Voor vertalingen
   const toggleNotification = useNotification(); // Voor notificaties
@@ -96,16 +110,15 @@ const DuplicatorWrapper = ({ buttonElement }) => {
   const handleDuplicate = () => {
     console.log('Dupliceer knop geklikt');
 
-    if (!buttonElement) {
-      console.error('Button element niet gevonden.');
+    if (!duplicatorButton) {
+      console.error('Duplicator button niet gevonden.');
       return;
     }
 
-    // Vind de variant component container via buttonElement
+    // Vind de variant component container via duplicatorButton
     // De structuur is:
-    // buttonElement -> parent (span) -> parent (div.sc-cbPlza)
-    // We gaan twee niveaus omhoog
-    const span = buttonElement.parentElement;
+    // duplicatorButton -> parent (span) -> parent (div.sc-aXZVg sc-gEvEer sc-cbPlza ...)
+    const span = duplicatorButton.parentElement;
     if (!span) {
       console.error('Span container niet gevonden.');
       return;
