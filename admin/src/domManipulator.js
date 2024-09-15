@@ -82,7 +82,7 @@ export const setupDOMManipulator = (app) => {
                         console.log('Dupliceer knop geklikt via innerHTML');
 
                         // Vind de variant component container via de DOM
-                        const variantComponent = buttonContainer.parentElement;
+                        const variantComponent = buttonContainer.closest('[role="region"]'); // Gebruik closest voor betere selectie
                         if (!variantComponent) {
                           console.error('Variant component container niet gevonden.');
                           return;
