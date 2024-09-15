@@ -3,19 +3,33 @@ import React from 'react';
 import { Button } from '@strapi/design-system/Button';
 import { useCMEditViewDataManager, useNotification } from '@strapi/helper-plugin';
 import { useIntl } from 'react-intl';
-import getTrad from './helpers/getTrad';
+import getTrad from './helpers/getTrad'; // Zorg ervoor dat deze helper correct is geïmporteerd
 import { createRoot } from 'react-dom/client';
 
+/**
+ * Setup DOM Manipulator
+ * Deze functie initialiseert een MutationObserver die de DOM observeert op toevoeging van nieuwe nodes.
+ * Het zoekt specifiek naar 'Delete' knoppen en voegt daar de Duplicator-knop naast toe.
+ *
+ * @param {object} app - Strapi app instance
+ */
 export const setupDOMManipulator = (app) => {
-  const targetNode = document.body; // Observe the entire body
-  const config = { childList: true, subtree: true };
+  const targetNode = document.body; // Observeer het gehele body-element
+  const config = { childList: true, subtree: true }; // Observeer kind-elementen en de gehele subtree
 
+  /**
+   * Callback functie voor MutationObserver
+   * Deze functie wordt aangeroepen telkens wanneer er wijzigingen zijn in de geobserveerde nodes.
+   *
+   * @param {MutationRecord[]} mutationsList - Lijst van mutaties
+   * @param {MutationObserver} observer - De observer instance
+   */
   const callback = (mutationsList, observer) => {
-    for (let mutation of mutationsList) {
+    mutationsList.forEach((mutation) => {
       if (mutation.type === 'childList') {
         mutation.addedNodes.forEach((node) => {
           if (node.nodeType === Node.ELEMENT_NODE) {
-            // Zoek naar alle 'Delete' knoppen
+            // Zoek naar alle 'Delete' knoppen binnen het nieuwe node
             const deleteButtons = node.querySelectorAll('button');
             deleteButtons.forEach((button) => {
               const span = button.querySelector('span');
@@ -31,14 +45,16 @@ export const setupDOMManipulator = (app) => {
 
                     // Creëer een nieuwe button element voor de duplicator knop
                     const duplicatorButton = document.createElement('button');
+                    duplicatorButton.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#212134" d="M1.056 24h15.906c.583 0 1.056-.473 1.056-1.056V7.028c0-.583-.473-1.056-1.056-1.056H1.056C.473 5.972 0 6.445 0 7.028v15.916C0 23.527.473 24 1.056 24Z"></path><path fill="#212134" d="M8.094 2.111h13.795v13.795h-1.127v2.112h2.182A1.056 1.056 0 0 0 24 16.962V1.056A1.056 1.056 0 0 0 22.944 0H7.038a1.056 1.056 0 0 0-1.056 1.056v2.252h2.112V2.11Z"></path></svg>';
                     duplicatorButton.classList.add('duplicator-button');
                     duplicatorButton.style.display = 'inline-block'; // Zorg ervoor dat de knop naast bestaande knoppen staat
                     duplicatorButton.style.marginLeft = '8px'; // Voeg wat ruimte toe
                     duplicatorButton.type = 'button'; // Zorg dat het een button is
+                    duplicatorButton.setAttribute('aria-label', 'Dupliceer Component'); // Toegankelijkheid
 
                     // Render de DuplicatorWrapper component in de nieuwe button
                     const root = createRoot(duplicatorButton);
-                    root.render(<DuplicatorWrapper buttonContainer={buttonContainer} />);
+                    root.render(<DuplicatorWrapper buttonElement={duplicatorButton} />);
 
                     // Voeg de duplicator knop toe aan de buttonContainer
                     buttonContainer.appendChild(duplicatorButton);
@@ -51,45 +67,66 @@ export const setupDOMManipulator = (app) => {
           }
         });
       }
-    }
+    });
   };
 
+  // Initialiseer de MutationObserver met de callback en config
   const observer = new MutationObserver(callback);
   observer.observe(targetNode, config);
   console.log('MutationObserver is geïnitialiseerd en aan het observeren.');
 };
 
-// Creëer een wrapper component omdat hooks niet rechtstreeks gebruikt kunnen worden buiten React componenten
-const DuplicatorWrapper = ({ buttonContainer }) => {
-  const { modifiedData, onChange } = useCMEditViewDataManager();
-  const { formatMessage } = useIntl();
-  const toggleNotification = useNotification();
+/**
+ * DuplicatorWrapper Component
+ * Deze component wordt gerenderd binnen de duplicator-knop en handelt de duplicatie logica af.
+ *
+ * @param {object} props - Component props
+ * @param {HTMLElement} props.buttonElement - De duplicator button element
+ */
+const DuplicatorWrapper = ({ buttonElement }) => {
+  const { modifiedData, onChange } = useCMEditViewDataManager(); // Haal de huidige data en onChange functie op
+  const { formatMessage } = useIntl(); // Voor vertalingen
+  const toggleNotification = useNotification(); // Voor notificaties
 
+  /**
+   * Handle Duplicate
+   * Deze functie wordt aangeroepen wanneer de duplicator-knop wordt geklikt.
+   * Het dupliceert de huidige variant en voegt deze toe aan de lijst.
+   */
   const handleDuplicate = () => {
     console.log('Dupliceer knop geklikt');
 
-    if (!buttonContainer) {
-      console.error('Button container niet gevonden.');
+    if (!buttonElement) {
+      console.error('Button element niet gevonden.');
       return;
     }
 
-    // Vind de variant component container via buttonContainer
-    // Omdat de structuur complex is, proberen we een hogere container te vinden
-    const variantComponent = buttonContainer.closest('div.sc-cbPlza'); // Gebruik een specifieke klasse die je in de DOM ziet
+    // Vind de variant component container via buttonElement
+    // De structuur is:
+    // buttonElement -> parent (span) -> parent (div.sc-cbPlza)
+    // We gaan twee niveaus omhoog
+    const span = buttonElement.parentElement;
+    if (!span) {
+      console.error('Span container niet gevonden.');
+      return;
+    }
 
-    console.log('Variant component:', variantComponent);
-
+    const variantComponent = span.parentElement;
     if (!variantComponent) {
       console.error('Variant component container niet gevonden.');
       return;
     }
+
+    console.log('Variant component:', variantComponent);
 
     // Haal de input velden binnen de component
     const inputs = variantComponent.querySelectorAll('input, select, textarea');
     let componentData = {};
 
     inputs.forEach((input) => {
-      componentData[input.name] = input.value;
+      if (input.name) {
+        componentData[input.name] = input.value;
+      }
     });
 
     console.log('Component data om te dupliceren:', componentData);
