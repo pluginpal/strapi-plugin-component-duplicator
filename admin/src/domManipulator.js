@@ -14,7 +14,7 @@ const DuplicatorButton = () => (
     tabIndex="0"
     aria-labelledby=":r1n:"
     aria-label="Dupliceer Component"
-    style={{ display: 'inline-block', marginLeft: '8px' }}
+    style={{ display: 'inline-block'}}
   >
     <span className="sc-kAyceB dLMruc">Duplicate item line 1</span>
     <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
