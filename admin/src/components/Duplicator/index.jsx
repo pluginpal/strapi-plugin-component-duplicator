@@ -24,11 +24,7 @@ const Duplicator = () => {
     onChange({ target: { name: 'variants', value: updatedVariants } });
   };
 
-  return (
-    <Button variant="secondary" onClick={handleDuplicate}>
-      {formatMessage({ id: getTrad('duplicator.button'), defaultMessage: 'Dupliceer Component' })}
-    </Button>
-  );
+  return null;
 };
 
 export default Duplicator;
