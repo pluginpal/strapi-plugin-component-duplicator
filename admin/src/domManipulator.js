@@ -1,6 +1,9 @@
 // admin/src/domManipulator.js
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { useCMEditViewDataManager, useNotification } from '@strapi/helper-plugin';
+import { useIntl } from 'react-intl';
+import getTrad from './helpers/getTrad';
 
 /**
  * DuplicatorButton Component
@@ -70,6 +73,7 @@ export const setupDOMManipulator = (app) => {
                     const duplicatorButtonHTML = renderToStaticMarkup(<DuplicatorButton />);
 
                     // Injecteer de HTML string in de duplicatorButton
+                    // Injecteer de HTML string in de duplicatorSpan
                     duplicatorSpan.innerHTML = duplicatorButtonHTML;
 
                     // Selecteer de duplicator-button om een event listener toe te voegen
