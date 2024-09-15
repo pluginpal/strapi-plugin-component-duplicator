@@ -1,0 +1,87 @@
+{
+  "name": "strapi-plugin-sitemap",
+  "version": "3.1.1",
+  "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
+  "strapi": {
+    "displayName": "Sitemap",
+    "name": "sitemap",
+    "icon": "sitemap",
+    "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
+    "required": false,
+    "kind": "plugin"
+  },
+  "bin": {
+    "strapi-sitemap": "./bin/strapi-sitemap"
+  },
+  "scripts": {
+    "build": "tsc --outDir build && yarn build:copy-files && yarn build:clean",
+    "build:install": "cp package.json build && cp yarn.lock build && cd build && yarn --frozen-lockfile --unsafe-perm --production",
+    "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/ && copyfiles -u 1 bin/**/* build/bin/ && copyfiles LICENSE.md build/ && copyfiles README.md build/",
+    "build:clean": "rimraf build/tsconfig.tsbuildinfo",
+    "develop": "yarn develop:copy-files && tsc -w",
+    "develop:copy-files": "copyfiles -u 1 xsl/**/* playground/src/plugins/sitemap/xsl/",
+    "eslint": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}'",
+    "eslint:fix": "eslint --fix './**/*.{js,jsx,ts,tsx}'",
+    "test:install": "mv yarn.lock tmp-yarn.lock && mv package.json tmp-package.json && yarn add @types/jest typescript jest ts-jest supertest && rm -rf package.json yarn.lock && mv tmp-package.json package.json && mv tmp-yarn.lock yarn.lock",
+    "test:unit": "ENV_PATH=./playground/.env jest --verbose --runInBand --forceExit",
+    "test:integration": "ENV_PATH=./playground/.env jest --verbose --runInBand --forceExit --testMatch **/healthcheck.test.js",
+    "docs:generate": "cd docs && yarn generate",
+    "docs:dev": "cd docs && yarn dev",
+    "playground:install": "cd playground && yarn install",
+    "playground:build": "cd playground && yarn build",
+    "playground:start": "cd playground && yarn start",
+    "playground:develop": "cd playground && yarn develop",
+    "playground:install-plugin": "cd playground && yarn add strapi-plugin-sitemap@'./../build'"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^8.3.0",
+    "immutable": "^3.8.2",
+    "redux-immutable": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "sitemap": "^7.1.0",
+    "xml2js": "^0.5.0"
+  },
+  "author": {
+    "name": "Boaz Poolman",
+    "email": "boaz@pluginpal.io",
+    "url": "https://github.com/boazpoolman"
+  },
+  "maintainers": [
+    {
+      "name": "Boaz Poolman",
+      "email": "boaz@pluginpal.io",
+      "url": "https://github.com/boazpoolman"
+    }
+  ],
+  "peerDependencies": {
+    "@strapi/strapi": "^4.0.0"
+  },
+  "devDependencies": {
+    "@strapi/design-system": "^1.14.1",
+    "@strapi/helper-plugin": "^4.19.0",
+    "@strapi/icons": "^1.14.1",
+    "@strapi/utils": "^4.19.0",
+    "@uncinc/eslint-config": "^1.1.0",
+    "copyfiles": "^2.4.1",
+    "jest": "^29.5.0",
+    "jest-cli": "^29.5.0",
+    "jest-styled-components": "^7.1.1",
+    "lodash": "^4.17.11",
+    "react": "^17.0.2",
+    "react-intl": "^5.20.12",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "styled-components": "^5.2.3",
+    "typescript": "^5.1.6"
+  },
+  "bugs": {
+    "url": "https://github.com/pluginpal/strapi-plugin-sitemap/issues"
+  },
+  "homepage": "https://www.pluginpal.io/plugin/sitemap",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
