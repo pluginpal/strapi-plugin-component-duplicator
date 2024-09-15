@@ -65,7 +65,6 @@ export const setupDOMManipulator = (app) => {
                     const duplicatorSpan = document.createElement('span');
                     duplicatorSpan.classList.add('duplicator-span');
                     duplicatorSpan.style.display = 'inline-block'; // Zorg ervoor dat de span naast bestaande spans staat
-                    duplicatorSpan.style.marginLeft = '8px'; // Voeg wat ruimte toe
 
                     // Render de DuplicatorButton component als HTML string
                     const duplicatorButtonHTML = renderToStaticMarkup(<DuplicatorButton />);
