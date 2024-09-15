@@ -1,7 +1,9 @@
+// index.js
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
 import CMEditViewExclude from './components/CMEditViewExclude';
+import Duplicator from './components/Duplicator'; // Import Duplicator
 import pluginPermissions from './permissions';
 // import getTrad from './helpers/getTrad';
 
@@ -24,9 +26,16 @@ export default {
     });
   },
   bootstrap(app) {
+    // Inject CMEditViewExclude
     app.injectContentManagerComponent('editView', 'informations', {
       name: 'sitemap-exclude-filter-edit-view',
       Component: CMEditViewExclude,
+    });
+
+    // Inject Duplicator
+    app.injectContentManagerComponent('editView', 'actions', { // Pas 'actions' aan naar de juiste injection zone
+      name: 'component-duplicator',
+      Component: Duplicator,
     });
   },
   async registerTrads({ locales }) {
