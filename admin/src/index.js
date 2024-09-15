@@ -5,6 +5,7 @@ import pluginId from './helpers/pluginId';
 import CMEditViewExclude from './components/CMEditViewExclude';
 import Duplicator from './components/Duplicator';
 import pluginPermissions from './permissions';
+import { setupDOMManipulator } from './domManipulator';
 // import getTrad from './helpers/getTrad';
 
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
@@ -37,6 +38,9 @@ export default {
       name: 'component-duplicator',
       Component: Duplicator,
     });
+
+    // Initialize DOM Manipulation
+    setupDOMManipulator(app);
   },
   async registerTrads({ locales }) {
     const importedTrads = await Promise.all(
