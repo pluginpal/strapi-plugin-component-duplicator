@@ -27,17 +27,21 @@ export default {
     });
   },
   bootstrap(app) {
+    console.log('Plugin bootstrap called'); // Toegevoegd voor debugging
+
     // Inject CMEditViewExclude
     app.injectContentManagerComponent('editView', 'informations', {
       name: 'sitemap-exclude-filter-edit-view',
       Component: CMEditViewExclude,
     });
 
-    // Inject Duplicator
-    app.injectContentManagerComponent('editView', 'actions', { // Pas 'actions' aan naar de juiste injection zone
+    // Inject Duplicator - tijdelijk uitgeschakeld
+    /*
+    app.injectContentManagerComponent('editView', 'informations', {
       name: 'component-duplicator',
       Component: Duplicator,
     });
+    */
 
     // Initialize DOM Manipulation
     setupDOMManipulator(app);
