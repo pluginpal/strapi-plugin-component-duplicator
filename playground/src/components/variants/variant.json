@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_variants_variants",
+  "info": {
+    "displayName": "variant",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "hub_bore_size": {
+      "type": "integer"
+    }
+  }
+}

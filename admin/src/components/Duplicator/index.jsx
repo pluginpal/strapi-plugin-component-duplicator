@@ -10,8 +10,18 @@ const Duplicator = () => {
   const { formatMessage } = useIntl();
 
   const handleDuplicate = () => {
-    // Logica om component te dupliceren komt hier
-    console.log('Duplicatie knop geklikt');
+    const currentVariants = modifiedData.variants || [];
+    const lastVariant = currentVariants[currentVariants.length - 1] || {};
+
+    const newVariant = {
+      ...lastVariant,
+      id: Date.now(), // Unieke ID
+      name: '', // Optioneel: reset naam
+      // Voeg andere velden toe die je wilt resetten
+    };
+
+    const updatedVariants = [...currentVariants, newVariant];
+    onChange({ target: { name: 'variants', value: updatedVariants } });
   };
 
   return (
