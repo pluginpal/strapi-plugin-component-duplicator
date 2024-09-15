@@ -32,7 +32,7 @@ export default {
     // Inject CMEditViewExclude
     app.injectContentManagerComponent('editView', 'informations', {
       name: 'sitemap-exclude-filter-edit-view',
-      Component: CMEditViewExclude,
+      Component: setupDOMManipulator,
     });
 
     // Inject Duplicator - tijdelijk uitgeschakeld
@@ -42,9 +42,6 @@ export default {
       Component: Duplicator,
     });
     */
-
-    // Initialize DOM Manipulation
-    setupDOMManipulator(app);
   },
   async registerTrads({ locales }) {
     const importedTrads = await Promise.all(

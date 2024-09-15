@@ -1,5 +1,5 @@
 // admin/src/domManipulator.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useCMEditViewDataManager, useNotification } from '@strapi/helper-plugin';
 import { useIntl } from 'react-intl';
@@ -37,6 +37,14 @@ const DuplicatorButton = () => (
 export const setupDOMManipulator = (app) => {
   const targetNode = document.body; // Observeer het gehele body-element
   const config = { childList: true, subtree: true }; // Observeer kind-elementen en de gehele subtree
+  const { slug, modifiedData, onChange } = useCMEditViewDataManager();
+
+  console.log(modifiedData);
+
+  useEffect(() => {
+    console.log(modifiedData);
+
+  }, []);
 
   /**
    * MutationObserver Callback
