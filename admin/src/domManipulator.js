@@ -72,7 +72,6 @@ export const setupDOMManipulator = (app) => {
                     // Render de DuplicatorButton component als HTML string
                     const duplicatorButtonHTML = renderToStaticMarkup(<DuplicatorButton />);
 
-                    // Injecteer de HTML string in de duplicatorButton
                     // Injecteer de HTML string in de duplicatorSpan
                     duplicatorSpan.innerHTML = duplicatorButtonHTML;
 
@@ -98,20 +97,23 @@ export const setupDOMManipulator = (app) => {
                         inputs.forEach((input) => {
                           if (input.name) {
                             componentData[input.name] = input.value;
+                            console.log(`Extracted ${input.name}: ${input.value}`);
+                          } else {
+                            console.warn('Input zonder naam gevonden:', input);
                           }
                         });
 
                         console.log('Component data om te dupliceren:', componentData);
 
                         // Implementeer de duplicatie logica
-                        const currentVariants = app.get('modifiedData')?.variants || [];
+                        const currentVariants = app.modifiedData?.variants || [];
                         const newVariant = { ...componentData, id: Date.now() }; // Voeg unieke ID toe indien nodig
 
                         const updatedVariants = [...currentVariants, newVariant];
-                        app.get('onChange')({ target: { name: 'variants', value: updatedVariants } });
+                        app.onChange({ target: { name: 'variants', value: updatedVariants } });
 
                         // Gebruik notification in plaats van alert
-                        app.get('toggleNotification')({
+                        app.toggleNotification({
                           type: 'success',
                           message: { id: getTrad('duplicator.success'), defaultMessage: 'Component gedupliceerd!' },
                         });
