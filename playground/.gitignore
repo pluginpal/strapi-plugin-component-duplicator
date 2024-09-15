@@ -116,7 +116,7 @@ build
 .strapi-updater.json
 
 ############################
-# Strapi Sitemap
+# Strapi Component Duplicator
 ############################
 
 src/plugins/**
