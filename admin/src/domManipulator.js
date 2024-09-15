@@ -48,11 +48,25 @@ export const setupDOMManipulator = (app) => {
                     duplicatorSpan.style.display = 'inline-block'; // Zorg ervoor dat de span naast bestaande spans staat
                     duplicatorSpan.style.marginLeft = '8px'; // Voeg wat ruimte toe
 
-                    // Render de DuplicatorButton component binnen de duplicatorSpan
-                    const root = createRoot(duplicatorSpan);
-                    root.render(<DuplicatorButton />);
+                    // Creëer een nieuwe button element voor de duplicator knop
+                    const duplicatorButton = document.createElement('button');
+                    duplicatorButton.className = 'sc-aXZVg sc-gEvEer sc-cwHptR bzWqhm bYXTJs ksKyfS sc-cfxfcM bNDrnU sc-cPrPEB gsfWfo duplicator-button';
+                    duplicatorButton.setAttribute('aria-disabled', 'false');
+                    duplicatorButton.setAttribute('type', 'button');
+                    duplicatorButton.setAttribute('tabindex', '0');
+                    duplicatorButton.setAttribute('aria-labelledby', ':r1n:');
+                    duplicatorButton.setAttribute('aria-label', 'Dupliceer Component');
+                    duplicatorButton.style.display = 'inline-block';
+                    duplicatorButton.style.marginLeft = '8px';
 
-                    // Voeg de duplicatorSpan toe naast de bestaande buttonContainer
+                    // Render de DuplicatorWrapper component binnen de duplicator button
+                    const root = createRoot(duplicatorButton);
+                    root.render(<DuplicatorWrapper />); // Verwijder buttonElement prop
+
+                    // Voeg de duplicator button toe aan de duplicator span
+                    duplicatorSpan.appendChild(duplicatorButton);
+
+                    // Voeg de duplicator span toe naast de bestaande span
                     buttonContainer.parentElement.insertBefore(duplicatorSpan, buttonContainer.nextSibling);
                   }
                 } else {
@@ -73,34 +87,31 @@ export const setupDOMManipulator = (app) => {
 };
 
 /**
- * DuplicatorButton Component
- * Deze component rendert de duplicator knop met de innerlijke span en SVG en handelt de duplicatie logica af.
+ * DuplicatorWrapper Component
+ * Deze component wordt gerenderd binnen de duplicator-knop en handelt de duplicatie logica af.
  */
-const DuplicatorButton = () => {
-  const { modifiedData, onChange } = useCMEditViewDataManager(); // Toegang tot huidige data en onChange functie
+const DuplicatorWrapper = () => {
+  const { modifiedData, onChange } = useCMEditViewDataManager(); // Haal de huidige data en onChange functie op
   const { formatMessage } = useIntl(); // Voor vertalingen
   const toggleNotification = useNotification(); // Voor notificaties
 
   /**
    * Handle Duplicate
-   * Deze functie wordt aangeroepen wanneer de duplicator knop wordt geklikt.
+   * Deze functie wordt aangeroepen wanneer de duplicator-knop wordt geklikt.
    * Het dupliceert de huidige variant en voegt deze toe aan de lijst.
-   *
-   * @param {Event} event - Klik event
    */
-  const handleDuplicate = (event) => {
-    console.log('Duplicator knop geklikt');
+  const handleDuplicate = () => {
+    console.log('Dupliceer knop geklikt');
 
-    const duplicatorButton = event.currentTarget; // De button die is geklikt
-
-    if (!duplicatorButton) {
+    // Vind de variant component container via de duplicatorButton
+    // duplicatorButton -> parent (span) -> parent (div.sc-aXZVg.sc-gEvEer.sc-cbPlza ...)
+    const button = document.querySelector('.duplicator-button');
+    if (!button) {
       console.error('Duplicator button niet gevonden.');
       return;
     }
 
-    // Vind de variant component container via duplicatorButton
-    // duplicatorButton -> parent (span) -> parent (div.sc-aXZVg sc-gEvEer sc-cbPlza ...)
-    const span = duplicatorButton.parentElement;
+    const span = button.parentElement;
     if (!span) {
       console.error('Span container niet gevonden.');
       return;
@@ -140,21 +151,31 @@ const DuplicatorButton = () => {
     });
   };
 
+  // Voeg een event listener toe aan de button
+  React.useEffect(() => {
+    const button = document.querySelector('.duplicator-button');
+    if (button) {
+      button.addEventListener('click', handleDuplicate);
+    }
+
+    // Clean up the event listener on unmount
+    return () => {
+      if (button) {
+        button.removeEventListener('click', handleDuplicate);
+      }
+    };
+  }, [modifiedData, onChange, toggleNotification, formatMessage]);
+
+  // Log rendering voor debugging
+  console.log('DuplicatorWrapper rendered');
+
   return (
-    <button
-      aria-disabled="false"
-      type="button"
-      className="duplicator-button sc-aXZVg sc-gEvEer sc-cwHptR bzWqhm bYXTJs ksKyfS sc-cfxfcM bNDrnU sc-cPrPEB gsfWfo"
-      tabindex="-1"
-      aria-labelledby=":r1n:"
-      onClick={handleDuplicate}
-      style={{ display: 'inline-block', marginLeft: '8px' }}
-    >
+    <>
       <span className="sc-kAyceB dLMruc">Duplicate item line 1</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path fill="#212134" d="M1.056 24h15.906c.583 0 1.056-.473 1.056-1.056V7.028c0-.583-.473-1.056-1.056-1.056H1.056C.473 5.972 0 6.445 0 7.028v15.916C0 23.527.473 24 1.056 24Z"></path>
         <path fill="#212134" d="M8.094 2.111h13.795v13.795h-1.127v2.112h2.182A1.056 1.056 0 0 0 24 16.962V1.056A1.056 1.056 0 0 0 22.944 0H7.038a1.056 1.056 0 0 0-1.056 1.056v2.252h2.112V2.11Z"></path>
       </svg>
-    </button>
+    </>
   );
 };
