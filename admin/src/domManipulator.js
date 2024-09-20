@@ -27,6 +27,8 @@ const DuplicatorButton = ({ index }) => (
   </button>
 );
 
+
+
 /**
  * Setup DOM Manipulator
  * Initialiseert een MutationObserver die de DOM observeert op toevoeging van nieuwe nodes.
@@ -79,44 +81,6 @@ export const setupDOMManipulator = (app) => {
                     const duplicatorButtonHTML = renderToStaticMarkup(<DuplicatorButton index={variantIndex} />);
                     duplicatorSpan.innerHTML = duplicatorButtonHTML;
 
-                    // Selecteer de duplicator-button om een event listener toe te voegen
-                    const duplicatorButton = duplicatorSpan.querySelector('.duplicator-button');
-                    if (duplicatorButton) {
-                      duplicatorButton.addEventListener('click', () => {
-                        console.log('Dupliceer knop geklikt via innerHTML');
-
-                        // Gebruik de variantIndex om de juiste variant te vinden
-                        const index = parseInt(duplicatorButton.getAttribute('data-index'), 10);
-                        console.log('Dupliceer knop index:', index);
-
-                        // Haal de variant data op via de index
-                        const componentData = modifiedData.variants[index];
-                        if (!componentData) {
-                          console.error('Variant data niet gevonden voor index:', index);
-                          return;
-                        }
-
-                        // Log de variant data
-                        console.log('Variant data:', componentData);
-
-                        // Implementeer de duplicatie logica
-                        const currentVariants = modifiedData.variants || [];
-                        const newVariant = { ...componentData, id: Date.now() }; // Voeg unieke ID toe indien nodig
-
-                        // Update de varianten lijst en voeg het nieuwe item toe
-                        const updatedVariants = [...currentVariants, newVariant];
-
-                        // Gebruik onChange om de nieuwe variant lijst in te stellen
-                        onChange({ target: { name: 'variants', value: updatedVariants } });
-
-                        // Gebruik notification in plaats van alert
-                        app.toggleNotification({
-                          type: 'success',
-                          message: { id: getTrad('duplicator.success'), defaultMessage: 'Component gedupliceerd!' },
-                        });
-                      });
-                    }
-
                     // Voeg de duplicator span toe naast de bestaande span
                     buttonContainer.parentElement.insertBefore(duplicatorSpan, buttonContainer.nextSibling);
 
@@ -134,10 +98,69 @@ export const setupDOMManipulator = (app) => {
     });
   };
 
-  // Initialiseer de MutationObserver met de callback en config
-  const observer = new MutationObserver(callback);
-  observer.observe(targetNode, config);
-  console.log('MutationObserver is geïnitialiseerd en aan het observeren.');
+  useEffect(() => {
+    // Initialiseer de MutationObserver met de callback en config
+
+    // @todo: De mutiation observer zorgt er voor dat de duplicator knoppen
+    // alleen worden toegevoegd aan de DOM wanneer er nieuwe nodes worden toegevoegd.
+    // Echter betekend dat voor bestaande wielen, met al eerder aangemaakte varianten,
+    // de duplicator knoppen niet worden toegevoegd. Dit moet nog worden opgelost.
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+  }, []);
+
+  useEffect(() => {
+    // @todo: Hier moet een loop komen om alle duplicator-buttons te selecteren
+    // en event listeners toe te voegen.
+
+    // Selecteer de duplicator-button om een event listener toe te voegen
+    const duplicatorButton = document.querySelector('.duplicator-button');
+
+    if (!duplicatorButton) {
+      return () => {};
+    }
+
+    const clickFunction = () => {
+      console.log('Dupliceer knop geklikt via innerHTML');
+
+      // Gebruik de variantIndex om de juiste variant te vinden
+      const index = parseInt(duplicatorButton.getAttribute('data-index'), 10);
+      console.log('Dupliceer knop indexx:', index);
+
+      // Haal de variant data op via de index
+      // @todo: Hier staat .Variant hardcoded. Dit moet dynamisch worden gemaakt.
+      const componentData = modifiedData.Variant[index];
+      if (!componentData) {
+        console.error('Variant data niet gevonden voor index:', index);
+        return;
+      }
+
+      // Log de variant data
+      console.log('Variant data:', componentData);
+
+      // Implementeer de duplicatie logica
+      // @todo: Hier staat .Variant hardcoded. Dit moet dynamisch worden gemaakt.
+      const currentVariants = modifiedData.Variant || [];
+      const newVariant = { ...componentData, id: Date.now() }; // Voeg unieke ID toe indien nodig
+
+      // Update de varianten lijst en voeg het nieuwe item toe
+      const updatedVariants = [...currentVariants, newVariant];
+
+      // Gebruik onChange om de nieuwe variant lijst in te stellen
+      // @todo: Hier staat Variant hardcoded. Dit moet dynamisch worden gemaakt.
+      onChange({ target: { name: 'Variant', value: updatedVariants } });
+
+      // Gebruik notification in plaats van alert
+      app.toggleNotification({
+        type: 'success',
+        message: { id: getTrad('duplicator.success'), defaultMessage: 'Component gedupliceerd!' },
+      });
+    };
+
+    duplicatorButton.addEventListener('click', clickFunction);
+
+    return () => duplicatorButton.removeEventListener('click', clickFunction);
+  }, [modifiedData]);
 };
 
 export default setupDOMManipulator;
