@@ -1,17 +1,17 @@
 {
-  "name": "strapi-plugin-sitemap",
+  "name": "strapi-plugin-component-duplicator",
   "version": "3.1.1",
-  "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
+  "description": "Generate a highly customizable component-duplicator XML in Strapi CMS.",
   "strapi": {
     "displayName": "Sitemap",
-    "name": "sitemap",
-    "icon": "sitemap",
-    "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
+    "name": "component-duplicator",
+    "icon": "component-duplicator",
+    "description": "Generate a highly customizable component-duplicator XML in Strapi CMS.",
     "required": false,
     "kind": "plugin"
   },
   "bin": {
-    "strapi-sitemap": "./bin/strapi-sitemap"
+    "strapi-component-duplicator": "./bin/strapi-component-duplicator"
   },
   "scripts": {
     "build": "tsc --outDir build && yarn build:copy-files && yarn build:clean",
@@ -19,7 +19,7 @@
     "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/ && copyfiles -u 1 bin/**/* build/bin/ && copyfiles LICENSE.md build/ && copyfiles README.md build/",
     "build:clean": "rimraf build/tsconfig.tsbuildinfo",
     "develop": "yarn develop:copy-files && tsc -w",
-    "develop:copy-files": "copyfiles -u 1 xsl/**/* playground/src/plugins/sitemap/xsl/",
+    "develop:copy-files": "copyfiles -u 1 xsl/**/* playground/src/plugins/component-duplicator/xsl/",
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx,ts,tsx}'",
     "test:install": "mv yarn.lock tmp-yarn.lock && mv package.json tmp-package.json && yarn add @types/jest typescript jest ts-jest supertest && rm -rf package.json yarn.lock && mv tmp-package.json package.json && mv tmp-yarn.lock yarn.lock",
@@ -31,7 +31,7 @@
     "playground:build": "cd playground && yarn build",
     "playground:start": "cd playground && yarn start",
     "playground:develop": "cd playground && yarn develop",
-    "playground:install-plugin": "cd playground && yarn add strapi-plugin-sitemap@'./../build'"
+    "playground:install-plugin": "cd playground && yarn add strapi-plugin-component-duplicator@'./../build'"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -39,19 +39,19 @@
     "immutable": "^3.8.2",
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.3.0",
-    "sitemap": "^7.1.0",
+    "component-duplicator": "^7.1.0",
     "xml2js": "^0.5.0"
   },
   "author": {
     "name": "Boaz Poolman",
     "email": "boaz@pluginpal.io",
-    "url": "https://github.com/boazpoolman"
+    "url": "https://github.com/pluginpal"
   },
   "maintainers": [
     {
       "name": "Boaz Poolman",
       "email": "boaz@pluginpal.io",
-      "url": "https://github.com/boazpoolman"
+      "url": "https://github.com/pluginpal"
     }
   ],
   "peerDependencies": {
@@ -76,9 +76,9 @@
     "typescript": "^5.1.6"
   },
   "bugs": {
-    "url": "https://github.com/pluginpal/strapi-plugin-sitemap/issues"
+    "url": "https://github.com/pluginpal/strapi-plugin-component-duplicator/issues"
   },
-  "homepage": "https://www.pluginpal.io/plugin/sitemap",
+  "homepage": "https://www.pluginpal.io/plugin/component-duplicator",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=6.0.0"

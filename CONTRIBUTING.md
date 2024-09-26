@@ -6,14 +6,14 @@ We want this community to be friendly and respectful to each other. Please follo
 
 This plugin provides a local development instance of Strapi to develop it's features. We call this instance `playground` and it can be found in the playground folder in the root of the project. For that reason it is not needed to have your own Strapi instance running to work on this plugin. Just clone the repo and you're ready to go!
 
-#### 1. Fork the [repository](https://github.com/boazpoolman/strapi-plugin-sitemap)
+#### 1. Fork the [repository](https://github.com/pluginpal/strapi-plugin-component-duplicator)
 
-[Go to the repository](https://github.com/boazpoolman/strapi-plugin-sitemap) and fork it to your own GitHub account.
+[Go to the repository](https://github.com/pluginpal/strapi-plugin-component-duplicator) and fork it to your own GitHub account.
 
 #### 2. Clone from your repository into the plugins folder
 
 ```bash
-git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git
+git clone git@github.com:YOUR_USERNAME/strapi-plugin-component-duplicator.git
 ```
 
 #### 3. Install the dependencies
@@ -21,7 +21,7 @@ git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git
 Go to the plugin and install it's dependencies.
 
 ```bash
-cd strapi-plugin-sitemap && yarn install
+cd strapi-plugin-component-duplicator && yarn install
 ```
 
 #### 4. Install the dependencies of the playground instance

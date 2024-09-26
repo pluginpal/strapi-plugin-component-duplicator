@@ -1,8 +1,8 @@
 const path = require('path');
 
 export default {
-  sitemap: {
+  component-duplicator: {
     enabled: true,
-    resolve: path.resolve(__dirname, '../../../../src/plugins/sitemap'),
+    resolve: path.resolve(__dirname, '../../../../src/plugins/component-duplicator'),
   },
 };

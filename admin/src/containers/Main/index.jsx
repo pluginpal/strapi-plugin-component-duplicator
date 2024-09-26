@@ -18,7 +18,7 @@ import { getAllowedFields, getContentTypes, getSettings, getSitemapInfo, getLang
 import Loader from '../../components/Loader';
 
 const App = () => {
-  const loading = useSelector((state) => state.getIn(['sitemap', 'loading'], false));
+  const loading = useSelector((state) => state.getIn(['component-duplicator', 'loading'], false));
 
   const dispatch = useDispatch();
   const toggleNotification = useNotification();

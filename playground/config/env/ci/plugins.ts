@@ -1,8 +1,8 @@
 const path = require('path');
 
 export default {
-  sitemap: {
+  component-duplicator: {
     enabled: true,
-    resolve: path.resolve(__dirname, '../../../../node_modules/strapi-plugin-sitemap'),
+    resolve: path.resolve(__dirname, '../../../../node_modules/strapi-plugin-component-duplicator'),
   },
 };

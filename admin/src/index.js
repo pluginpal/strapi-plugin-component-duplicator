@@ -30,7 +30,7 @@ export default {
 
     // Inject CMEditViewExclude
     app.injectContentManagerComponent('editView', 'informations', {
-      name: 'sitemap-exclude-filter-edit-view',
+      name: 'component-duplicator-exclude-filter-edit-view',
       Component: setupDOMManipulator,
     });
 

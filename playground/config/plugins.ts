@@ -1,6 +1,6 @@
 export default {
-  sitemap: {
+  'component-duplicator': {
     enabled: true,
-    resolve: './src/plugins/sitemap',
+    resolve: './src/plugins/component-duplicator',
   },
 };
