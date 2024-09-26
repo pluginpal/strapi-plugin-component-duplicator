@@ -2,7 +2,6 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
-import CMEditViewExclude from './components/CMEditViewExclude';
 import Duplicator from './components/Duplicator';
 import pluginPermissions from './permissions';
 import { setupDOMManipulator } from './domManipulator';

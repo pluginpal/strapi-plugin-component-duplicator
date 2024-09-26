@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useCMEditViewDataManager, useNotification } from '@strapi/helper-plugin';
 import { useIntl } from 'react-intl';
@@ -27,6 +27,41 @@ const DuplicatorButton = ({ index }) => (
   </button>
 );
 
+const insertDuplicateButton = (node) => {
+  // Zoek naar alle 'Delete' knoppen binnen het nieuwe node
+  const deleteButtons = node.querySelectorAll('button');
+  deleteButtons.forEach((button) => {
+    const duplicatorButtons = document.querySelectorAll('.duplicator-button');
+    const index = duplicatorButtons.length;
+    const span = button.querySelector('span');
+    if (span && span.textContent.trim() === 'Delete') {
+      console.log('Gevonden Delete knop:', button);
+
+      const buttonContainer = button.parentElement; // De <span> element rond de 'Delete' knop
+
+      if (buttonContainer) {
+        // Controleer of de duplicator knop al bestaat binnen dezelfde container
+        if (!buttonContainer.querySelector('.duplicator-span')) { // Check for duplicator-span
+          console.log('Voeg duplicator knop toe aan:', buttonContainer);
+
+          // Creëer een nieuwe <span> element voor de duplicator knop
+          const duplicatorSpan = document.createElement('span');
+          duplicatorSpan.classList.add('duplicator-span');
+          duplicatorSpan.style.display = 'inline-block'; // Zorg ervoor dat de span naast bestaande spans staat
+
+          // Render de DuplicatorButton component als HTML string en geef de variant index door
+          const duplicatorButtonHTML = renderToStaticMarkup(<DuplicatorButton index={index} />);
+          duplicatorSpan.innerHTML = duplicatorButtonHTML;
+
+          // Voeg de duplicator span toe naast de bestaande span
+          buttonContainer.parentElement.insertBefore(duplicatorSpan, buttonContainer.nextSibling);
+        }
+      } else {
+        console.warn('buttonContainer niet gevonden voor Delete knop:', button);
+      }
+    }
+  });
+};
 
 
 /**
@@ -37,68 +72,45 @@ const DuplicatorButton = ({ index }) => (
  * @param {object} app - Strapi app instance
  */
 export const setupDOMManipulator = (app) => {
+  const [insertedButtons, setInsertedButtons] = useState(0);
   const targetNode = document.body; // Observeer het gehele body-element
   const config = { childList: true, subtree: true }; // Observeer kind-elementen en de gehele subtree
-  const { modifiedData, onChange } = useCMEditViewDataManager();
+  const { modifiedData, onChange, slug, allLayoutData } = useCMEditViewDataManager();
+
+  console.log(modifiedData);
 
   useEffect(() => {
-    console.log(modifiedData);
-  }, [modifiedData]);
+    const visibleFields = allLayoutData.contentType.layouts.edit;
+    const repeatableComponentFields = visibleFields.filter((field) => field[0].fieldSchema.type === 'component' && field[0].fieldSchema.repeatable);
 
-  /**
-   * MutationObserver Callback
-   * Deze functie wordt aangeroepen telkens wanneer er wijzigingen zijn in de geobserveerde nodes.
-   *
-   * @param {MutationRecord[]} mutationsList - Lijst van mutaties
-   * @param {MutationObserver} observer - De observer instance
-   */
-  const callback = (mutationsList, observer) => {
-    mutationsList.forEach((mutation) => {
-      if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === Node.ELEMENT_NODE) {
-            // Zoek naar alle 'Delete' knoppen binnen het nieuwe node
-            const deleteButtons = node.querySelectorAll('button');
-            let variantIndex = 0; // Index om de juiste variant aan te geven
-            deleteButtons.forEach((button) => {
-              const span = button.querySelector('span');
-              if (span && span.textContent.trim() === 'Delete') {
-                console.log('Gevonden Delete knop:', button);
+    repeatableComponentFields.forEach((field) => {
+      const { label } = field[0].metadatas;
 
-                const buttonContainer = button.parentElement; // De <span> element rond de 'Delete' knop
-
-                if (buttonContainer) {
-                  // Controleer of de duplicator knop al bestaat binnen dezelfde container
-                  if (!buttonContainer.querySelector('.duplicator-span')) { // Check for duplicator-span
-                    console.log('Voeg duplicator knop toe aan:', buttonContainer);
-
-                    // Creëer een nieuwe <span> element voor de duplicator knop
-                    const duplicatorSpan = document.createElement('span');
-                    duplicatorSpan.classList.add('duplicator-span');
-                    duplicatorSpan.style.display = 'inline-block'; // Zorg ervoor dat de span naast bestaande spans staat
-
-                    // Render de DuplicatorButton component als HTML string en geef de variant index door
-                    const duplicatorButtonHTML = renderToStaticMarkup(<DuplicatorButton index={variantIndex} />);
-                    duplicatorSpan.innerHTML = duplicatorButtonHTML;
-
-                    // Voeg de duplicator span toe naast de bestaande span
-                    buttonContainer.parentElement.insertBefore(duplicatorSpan, buttonContainer.nextSibling);
-
-                    // Verhoog de variant index
-                    variantIndex++;
-                  }
-                } else {
-                  console.warn('buttonContainer niet gevonden voor Delete knop:', button);
-                }
-              }
-            });
-          }
-        });
+      for (const labelElement of document.querySelectorAll('label')) {
+        if (labelElement.textContent?.startsWith(`${label}`)) {
+          const wrapperElement = labelElement.parentElement.parentElement.parentElement;
+          insertDuplicateButton(wrapperElement);
+          setInsertedButtons(insertedButtons + 1);
+        }
       }
     });
-  };
+  }, [allLayoutData]);
 
   useEffect(() => {
+    const callback = (mutationsList, observer) => {
+      mutationsList.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              insertDuplicateButton(node);
+              setInsertedButtons(insertedButtons + 1);
+              console.log('inserted button');
+            }
+          });
+        }
+      });
+    };
+
     // Initialiseer de MutationObserver met de callback en config
 
     // @todo: De mutiation observer zorgt er voor dat de duplicator knoppen
@@ -114,17 +126,17 @@ export const setupDOMManipulator = (app) => {
     // en event listeners toe te voegen.
 
     // Selecteer de duplicator-button om een event listener toe te voegen
-    const duplicatorButton = document.querySelector('.duplicator-button');
+    const duplicatorButtons = document.querySelectorAll('.duplicator-button');
 
-    if (!duplicatorButton) {
+    if (!duplicatorButtons || duplicatorButtons.length === 0) {
       return () => {};
     }
 
-    const clickFunction = () => {
-      console.log('Dupliceer knop geklikt via innerHTML');
+    const clickFunction = (e) => {
+      console.log('Dupliceer knop geklikt via innerHTML', e);
 
       // Gebruik de variantIndex om de juiste variant te vinden
-      const index = parseInt(duplicatorButton.getAttribute('data-index'), 10);
+      const index = parseInt(e.target.parentElement.parentElement.getAttribute('data-index'), 10);
       console.log('Dupliceer knop indexx:', index);
 
       // Haal de variant data op via de index
@@ -141,7 +153,8 @@ export const setupDOMManipulator = (app) => {
       // Implementeer de duplicatie logica
       // @todo: Hier staat .Variant hardcoded. Dit moet dynamisch worden gemaakt.
       const currentVariants = modifiedData.Variant || [];
-      const newVariant = { ...componentData, id: Date.now() }; // Voeg unieke ID toe indien nodig
+      const newVariant = { ...componentData, __temp_key__: Date.now() }; // Voeg unieke ID toe indien nodig
+      delete newVariant.id;
 
       // Update de varianten lijst en voeg het nieuwe item toe
       const updatedVariants = [...currentVariants, newVariant];
@@ -150,17 +163,25 @@ export const setupDOMManipulator = (app) => {
       // @todo: Hier staat Variant hardcoded. Dit moet dynamisch worden gemaakt.
       onChange({ target: { name: 'Variant', value: updatedVariants } });
 
-      // Gebruik notification in plaats van alert
-      app.toggleNotification({
-        type: 'success',
-        message: { id: getTrad('duplicator.success'), defaultMessage: 'Component gedupliceerd!' },
-      });
+      // // Gebruik notification in plaats van alert
+      // app.toggleNotification({
+      //   type: 'success',
+      //   message: { id: getTrad('duplicator.success'), defaultMessage: 'Component gedupliceerd!' },
+      // });
     };
 
-    duplicatorButton.addEventListener('click', clickFunction);
+    duplicatorButtons.forEach((button) => {
+      button.addEventListener('click', clickFunction);
+    });
 
-    return () => duplicatorButton.removeEventListener('click', clickFunction);
-  }, [modifiedData]);
+    console.log('added click function');
+
+    return () => {
+      duplicatorButtons.forEach((button) => {
+        button.removeEventListener('click', clickFunction);
+      });
+    };
+  }, [modifiedData, insertedButtons]);
 };
 
 export default setupDOMManipulator;
