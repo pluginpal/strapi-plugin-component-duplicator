@@ -8,9 +8,7 @@ const Button = () => (
   <button
     aria-disabled="false"
     type="button"
-    className="sc-aXZVg sc-gEvEer sc-cwHptR bzWqhm bYXTJs ksKyfS sc-cfxfcM bNDrnU sc-cPrPEB gsfWfo duplicator-button"
     tabIndex="0"
-    aria-labelledby=":r1n:"
     style={{ display: 'inline-block', width: '2rem', height: '2rem', padding: '8px' }}
   >
     <Duplicate width={12} fill="#666687" />
