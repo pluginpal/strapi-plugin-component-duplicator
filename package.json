@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-component-duplicator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A duplicate button for your repeatable components.",
   "strapi": {
     "displayName": "Component Duplicator",
