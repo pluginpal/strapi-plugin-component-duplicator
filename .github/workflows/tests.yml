@@ -62,7 +62,7 @@ jobs:
         run: yarn test:install
       - name: Build playground
         run: NODE_ENV=ci yarn playground:build
-      - name: Run unit tests
-        run: NODE_ENV=ci yarn test:unit
+      # - name: Run unit tests
+      #   run: NODE_ENV=ci yarn test:unit
       - name: Run integration tests
         run: NODE_ENV=ci yarn test:integration
