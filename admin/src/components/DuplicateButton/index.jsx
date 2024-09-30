@@ -9,6 +9,7 @@ const Button = () => (
     aria-disabled="false"
     type="button"
     tabIndex="0"
+    className="duplicator-button"
     style={{ display: 'inline-block', width: '2rem', height: '2rem', padding: '8px' }}
   >
     <Duplicate width={12} fill="#666687" />
