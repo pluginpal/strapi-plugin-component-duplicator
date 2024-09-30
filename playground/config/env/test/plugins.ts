@@ -1,7 +1,7 @@
 const path = require('path');
 
 export default {
-  component-duplicator: {
+  'component-duplicator': {
     enabled: true,
     resolve: path.resolve(__dirname, '../../../../src/plugins/component-duplicator'),
   },

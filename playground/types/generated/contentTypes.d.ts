@@ -833,6 +833,7 @@ export interface ApiWielenWielen extends Schema.CollectionType {
     singularName: 'wielen';
     pluralName: 'wielens';
     displayName: 'Wielen';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -840,6 +841,7 @@ export interface ApiWielenWielen extends Schema.CollectionType {
   attributes: {
     modelnummer: Attribute.String;
     Variant: Attribute.Component<'variants.variant', true>;
+    tralali: Attribute.Component<'variants.variant', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

@@ -4,7 +4,7 @@ import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
 import Duplicator from './components/Duplicator';
 import pluginPermissions from './permissions';
-import { setupDOMManipulator } from './domManipulator';
+import DuplicateButton from './components/DuplicateButton';
 // import getTrad from './helpers/getTrad';
 
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
@@ -31,7 +31,7 @@ export default {
     // Inject CMEditViewExclude
     app.injectContentManagerComponent('editView', 'informations', {
       name: 'component-duplicator-exclude-filter-edit-view',
-      Component: setupDOMManipulator,
+      Component: DuplicateButton,
     });
 
     // Inject Duplicator - tijdelijk uitgeschakeld

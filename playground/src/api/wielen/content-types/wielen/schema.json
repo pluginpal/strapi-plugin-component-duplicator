@@ -4,7 +4,8 @@
   "info": {
     "singularName": "wielen",
     "pluralName": "wielens",
-    "displayName": "Wielen"
+    "displayName": "Wielen",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -16,6 +17,11 @@
     },
     "Variant": {
       "displayName": "variant",
+      "type": "component",
+      "repeatable": true,
+      "component": "variants.variant"
+    },
+    "tralali": {
       "type": "component",
       "repeatable": true,
       "component": "variants.variant"
