@@ -10,11 +10,11 @@
   <a href="https://www.npmjs.org/package/strapi-plugin-component-duplicator">
     <img src="https://img.shields.io/npm/dm/strapi-plugin-component-duplicator" alt="Monthly download on NPM" />
   </a>
-  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-component-duplicator">
-    <img src="https://img.shields.io/github/actions/workflow/status/boazpoolman/strapi-plugin-component-duplicator/tests.yml?branch=master" alt="CI build status" />
+  <a href="https://codecov.io/gh/pluginpal/strapi-plugin-component-duplicator">
+    <img src="https://img.shields.io/github/actions/workflow/status/pluginpal/strapi-plugin-component-duplicator/tests.yml?branch=master" alt="CI build status" />
   </a>
-  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-component-duplicator">
-    <img src="https://codecov.io/gh/boazpoolman/strapi-plugin-component-duplicator/coverage.svg?branch=master" alt="codecov.io" />
+  <a href="https://codecov.io/gh/pluginpal/strapi-plugin-component-duplicator">
+    <img src="https://codecov.io/gh/pluginpal/strapi-plugin-component-duplicator/coverage.svg?branch=master" alt="codecov.io" />
   </a>
 </p>
 </div>
@@ -66,7 +66,7 @@ Give a star if this project helped you.
 ## 🔗 Links
 
 - [NPM package](https://www.npmjs.com/package/strapi-plugin-component-duplicator)
-- [GitHub repository](https://github.com/boazpoolman/strapi-plugin-component-duplicator)
+- [GitHub repository](https://github.com/pluginpal/strapi-plugin-component-duplicator)
 
 ## 🌎 Community support
 
