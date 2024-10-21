@@ -11,10 +11,10 @@
     <img src="https://img.shields.io/npm/dm/strapi-plugin-component-duplicator" alt="Monthly download on NPM" />
   </a>
   <a href="https://codecov.io/gh/pluginpal/strapi-plugin-component-duplicator">
-    <img src="https://img.shields.io/github/actions/workflow/status/pluginpal/strapi-plugin-component-duplicator/tests.yml?branch=master" alt="CI build status" />
+    <img src="https://img.shields.io/github/actions/workflow/status/pluginpal/strapi-plugin-component-duplicator/tests.yml?branch=main" alt="CI build status" />
   </a>
   <a href="https://codecov.io/gh/pluginpal/strapi-plugin-component-duplicator">
-    <img src="https://codecov.io/gh/pluginpal/strapi-plugin-component-duplicator/coverage.svg?branch=master" alt="codecov.io" />
+    <img src="https://codecov.io/gh/pluginpal/strapi-plugin-component-duplicator/coverage.svg?branch=main" alt="codecov.io" />
   </a>
 </p>
 </div>
